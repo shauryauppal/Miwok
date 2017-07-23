@@ -37,14 +37,17 @@ public class WordAdapter extends ArrayAdapter<Word> {
             vi = LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.list_item,parent,false);
         }
+
+        //Listitem position
         Word currentWord = getItem(position);
 
+        //for Miwok text display
         TextView nameTextView = (TextView) v.findViewById(R.id.miwok_text_view);
-
         nameTextView.setText(currentWord.getMiwokTranslation());
-
+//       For English text Display
         TextView defaulltTextView = (TextView) v.findViewById(R.id.default_text_view);
         defaulltTextView.setText(currentWord.getdefaultTranslation());
+
         ImageView imageview = (ImageView) v.findViewById(R.id.miwok_image);
         if(currentWord.hasImage()) {
            imageview.setImageResource(currentWord.getImage());
@@ -54,12 +57,16 @@ public class WordAdapter extends ArrayAdapter<Word> {
        {
            imageview.setVisibility(View.GONE);
        }
+
+
         // Set the theme color for the list item
                 View textContainer = v.findViewById(R.id.text_container);
                 // Find the color that the resource ID maps to
                        int color = ContextCompat.getColor(getContext(), mColor);
                // Set the background color of the text container View
                         textContainer.setBackgroundColor(color);
+
+
 
         return v;
     }

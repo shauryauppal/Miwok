@@ -10,11 +10,12 @@ public class Word {
     private String mMiwokTranslation;
     private String mDefaultTranslation;
     private int mMiwokImage=-1;
-
-    public Word(String DefaultTranslation,String MiwokTranslation)
+    private int mIdmusic=-1;
+    public Word(String DefaultTranslation,String MiwokTranslation,int Idmusic)
     {
         mMiwokTranslation=MiwokTranslation;
         mDefaultTranslation=DefaultTranslation;
+        mIdmusic=Idmusic;
     }
 
     /**
@@ -24,13 +25,15 @@ public class Word {
      * @param MiwokTranslation
      * @return Miwok translation
      * @param MiwokImage
-     * @return Miwok iamge
+     * @return Miwok image
      */
-    public Word(String DefaultTranslation,String MiwokTranslation,int MiwokImage)
+    public Word(String DefaultTranslation,String MiwokTranslation,int MiwokImage,int Idmusic)
     {
         mMiwokTranslation=MiwokTranslation;
         mDefaultTranslation=DefaultTranslation;
         mMiwokImage=MiwokImage;
+        mIdmusic=Idmusic;
+
     }
     /**
      * this will return english translation
@@ -59,4 +62,5 @@ public class Word {
             return false;
         else return true;
     }
+    public int getMusic() {return  mIdmusic;}
 }
