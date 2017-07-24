@@ -47,6 +47,7 @@ public class FamilyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
 
+
         final ArrayList< Word > Num= new ArrayList< Word >();
         Num.add(new Word("father","әpә",R.drawable.family_father,R.raw.family_father));
         Num.add(new Word("son","angsi",R.drawable.family_son,R.raw.family_son));

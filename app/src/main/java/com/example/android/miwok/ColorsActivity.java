@@ -48,6 +48,9 @@ public class ColorsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         final ArrayList< Word > Num= new ArrayList< Word >();
         Num.add(new Word("red","weṭeṭṭi",R.drawable.color_red,R.raw.color_red));
         Num.add(new Word("green","chokokki",R.drawable.color_green,R.raw.color_green));
