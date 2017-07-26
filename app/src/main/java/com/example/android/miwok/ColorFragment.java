@@ -1,23 +1,30 @@
 package com.example.android.miwok;
 
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class ColorsActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ColorFragment extends Fragment {
 
     private MediaPlayer mp;
     private MediaPlayer.OnCompletionListener mcompletion = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
-           releaseMediaPlayer();
+            releaseMediaPlayer();
         }
     };
     private AudioManager mAudioManager;
@@ -40,16 +47,34 @@ public class ColorsActivity extends AppCompatActivity {
         }
     };
 
-    protected void onStop() {
+    private void releaseMediaPlayer()
+    {
+        if(mp!=null)
+        {
+            mp.release();
+            mp=null;
+            mAudioManager.abandonAudioFocus(mAudioFoucus);
+
+        }
+    }
+
+    @Override
+    public void onStop() {
         super.onStop();
-        //this would help use release the resource when we leave the Activity
         releaseMediaPlayer();
     }
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_list);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    public ColorFragment() {
+        // Required empty public constructor
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootview = inflater.inflate(R.layout.word_list,container,false);
+
+
 
         final ArrayList< Word > Num= new ArrayList< Word >();
         Num.add(new Word("red","weṭeṭṭi",R.drawable.color_red,R.raw.color_red));
@@ -62,10 +87,10 @@ public class ColorsActivity extends AppCompatActivity {
 //         Log.v("number->",Num.get());
 //          Log.v("number->",Num.get(1));
 //        Log.v("number->",Num.get(2));
-       mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 
-        WordAdapter adapter = new WordAdapter  (this,Num,R.color.category_colors);
-        ListView listview = (ListView) findViewById(R.id.list);
+        WordAdapter adapter = new WordAdapter  (getActivity(),Num,R.color.category_colors);
+        ListView listview = (ListView) rootview.findViewById(R.id.list);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -74,9 +99,9 @@ public class ColorsActivity extends AppCompatActivity {
                 releaseMediaPlayer();
                 Word word = Num.get(i);
 //                Log.v("ColorActivity->","Current word:"+ word);
-               int result = mAudioManager.requestAudioFocus(mAudioFoucus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                int result = mAudioManager.requestAudioFocus(mAudioFoucus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 if(result==AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    mp = mp.create(ColorsActivity.this, word.getMusic());
+                    mp = mp.create(getActivity(), word.getMusic());
                     mp.start();
 
                     mp.setOnCompletionListener(mcompletion);
@@ -86,18 +111,6 @@ public class ColorsActivity extends AppCompatActivity {
         });
 
 
-
-    }
-
-
-    private void releaseMediaPlayer()
-    {
-        if(mp!=null)
-        {
-            mp.release();
-            mp=null;
-            mAudioManager.abandonAudioFocus(mAudioFoucus);
-
-        }
+        return rootview;
     }
 }
