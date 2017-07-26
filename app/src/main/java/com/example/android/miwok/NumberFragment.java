@@ -1,16 +1,26 @@
 package com.example.android.miwok;
 
+
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class NumbersActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class NumberFragment extends Fragment {
+
+
     private MediaPlayer mp;
 
     private MediaPlayer.OnCompletionListener mcompetition = new MediaPlayer.OnCompletionListener() {
@@ -60,29 +70,42 @@ public class NumbersActivity extends AppCompatActivity {
         }
     };
 
+    private void releaseMediaPlayer()
+    {
+        if(mp!=null)
+        {
+            mp.release();
+            mp=null;
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeLister);
 
-
+        }
+    }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
-        //this would help use release the resource when we leave the Activity
+
         releaseMediaPlayer();
     }
 
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_list);
 
-        //Add Up Navigation at action bar
-       // getActionBar().setDisplayHomeAsUpEnabled(true);
+    public NumberFragment() {
+        // Required empty public constructor
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.word_list, container, false);
+
 
         //AudioManager Object
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);//changed error fixed
 
 
-        final ArrayList < Word > Num= new ArrayList< Word >();
+        final ArrayList< Word > Num= new ArrayList< Word >();
         Num.add(new Word("One","lutti",R.drawable.number_one,R.raw.number_one));
         Num.add(new Word("Two","otiiko",R.drawable.number_two,R.raw.number_two));
         Num.add(new Word("Three","tolookosu",R.drawable.number_three,R.raw.number_three));
@@ -98,19 +121,16 @@ public class NumbersActivity extends AppCompatActivity {
 //          Log.v("number->",Num.get(1));
 //        Log.v("number->",Num.get(2));
 
-        WordAdapter adapter = new WordAdapter  (this,Num,R.color.category_numbers);
-        ListView listview = (ListView) findViewById(R.id.list);
+        WordAdapter adapter = new WordAdapter  (getActivity(),Num,R.color.category_numbers);
+        ListView listview = (ListView) rootView.findViewById(R.id.list);//changed error fixed
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 releaseMediaPlayer();
-//              Toast.makeText(NumbersActivity.this, "hello colors", Toast.LENGTH_SHORT).show();
-                //Get link og position
                 Word word = Num.get(position);
 
-                //    mp=MediaPlayer.create(NumbersActivity.this,word.getMusic());
 
                 //AudioFocus Request creation
                 // Request audio focus so in order to play the audio file. The app needs to play a
@@ -119,7 +139,7 @@ public class NumbersActivity extends AppCompatActivity {
                 int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeLister,
                         AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    mp = MediaPlayer.create(NumbersActivity.this,word.getMusic());
+                    mp = MediaPlayer.create(getActivity(),word.getMusic());
                     mp.start();
                     mp.setOnCompletionListener(mcompetition);
                 }
@@ -128,16 +148,9 @@ public class NumbersActivity extends AppCompatActivity {
             }
         });
 
+        return rootView;
 
     }
-    private void releaseMediaPlayer()
-    {
-        if(mp!=null)
-        {
-            mp.release();
-            mp=null;
-            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeLister);
 
-        }
-    }
+
 }
