@@ -30,4 +30,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--This is the search title for searchview-->
+    <string name="search_title">Word</string>
+
+    <!--Seaarch hint -->
+    <string name="search_hint">Search Word</string>
+
+    <!--Search results-->
+    <string name="search_result">Search Results</string>
 </resources>
